@@ -6,9 +6,10 @@ import LanguageContext from './LanguageContext';
 import LanguageSwitcher from './LanguageSwitcher';
 import CarContext from './CarContext';
 import CarChanger from './CarChanger';
-import RepairContext from './RepairContext';
+// import RepairContext from './RepairContext';
 import RepairProvider from './RepairProvider';
 import Repairs from './Repairs';
+import { RepairData } from './RepairContext';
 
 export default function App() {
   const [language, setLanguage] = useState('en');
@@ -20,30 +21,6 @@ export default function App() {
 
   const lang = language === 'en' ? 'de' : 'en';
   const v = vehicle === 'vw' ? 'dodge' : 'vw';
-  const infos = {
-    vw: {
-      wait: {
-        text: 'Wait time: ',
-        value: 'long',
-      },
-      cost: {
-        text: 'Cost of repairs:',
-        value: 'moderate',
-      },
-      comment: '',
-    },
-    dodge: {
-      wait: {
-        text: 'Wait time: ',
-        value: 'short',
-      },
-      cost: {
-        text: 'Cost of repairs:',
-        value: 'high',
-      },
-      comment: '',
-    },
-  };
 
   const divStyle = {
     fontSize: '14pt',
@@ -57,10 +34,26 @@ export default function App() {
     marginBottom: '16px',
   };
 
+  const vehicleData: RepairData = {
+    vehicles: {
+      vw: {
+        wait: 'long',
+        cost: 'moderate',
+        comment: '',
+      },
+      dodge: {
+        wait: 'short',
+        cost: 'high',
+        comment: '',
+      },
+    },
+    setVehicles: ({}) => void {},
+  } as RepairData;
+
   return (
     <LanguageContext.Provider value={value}>
       <CarContext.Provider value={cars}>
-        <RepairProvider>
+        <RepairProvider value={vehicleData}>
           <h3>
             Current Language: <strong>{language}</strong>
           </h3>
@@ -86,7 +79,7 @@ export default function App() {
           <br></br>
           <br></br>
           <h3>Vehicle repair info for {vehicle}</h3>
-          <Repairs></Repairs>
+          <Repairs />
         </RepairProvider>
       </CarContext.Provider>
     </LanguageContext.Provider>

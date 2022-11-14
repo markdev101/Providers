@@ -5,13 +5,9 @@ import * as React from 'react';
 
 const Repairs = () => {
   const car: any = useContext(CarContext);
-  const { wait, cost, comment } = useContext(RepairContext);
+  const { vehicles, setVehicles } = useContext(RepairContext);
 
-  const [stWait, setWait] = wait;
-  const [stCost, setCost] = React.useState();
-  const [stComment, setComment] = React.useState();
-
-  console.log('REPAIRS: ', wait, cost, comment);
+  console.log('REPAIRS: ', vehicles, setVehicles);
 
   const handleSaveComment = () => {
     console.log('Save Comment Clicked');
@@ -40,18 +36,27 @@ const Repairs = () => {
     left: '-80px',
   };
 
-  return (
-    <div style={divStyle}>
-      <p>Car name = {car.vehicle}</p>
-      <p> Wait = {stWait} </p>
-      <p> Cost = {stCost} </p>
-      <p> Comment: </p>
-      <textarea style={commentStyle}>{stComment}</textarea>
-      <button style={buttonStyle} onClick={() => handleSaveComment()}>
-        Save Comment
-      </button>
-    </div>
-  );
+  console.log('Car = ' + car.vehicle);
+  const details: any = vehicles[car.vehicle];
+  if (details) {
+    console.log(' STATS: ', details);
+
+    return (
+      <div style={divStyle}>
+        <p>Car name = {car.vehicle}</p>
+        <p> Wait = {details.wait} </p>
+        <p> Cost = {details.cost} </p>
+        <p> Comment: </p>
+        <textarea style={commentStyle}>{details.comment}</textarea>
+        <button style={buttonStyle} onClick={() => handleSaveComment()}>
+          Save Comment
+        </button>
+      </div>
+    );
+  } else {
+    console.log('REPAIRS: ', vehicles, setVehicles, RepairContext.Provider);
+    return <div>No data found for {car.vehicle}</div>;
+  }
 };
 
 export default Repairs;
