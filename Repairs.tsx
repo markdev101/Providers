@@ -13,9 +13,13 @@ const Repairs = () => {
 
   console.log('REPAIRS: ', wait, cost, comment);
 
+  const handleSaveComment = () => {
+    console.log('Save Comment Clicked');
+  };
+
   const divStyle = {
     position: 'relative',
-    left: '100px',
+    left: '20px',
     minWidth: '300px',
     height: '300px',
     backkgroundColor: '#efefef',
@@ -25,9 +29,15 @@ const Repairs = () => {
   };
   const commentStyle = {
     position: 'relative',
-    left: '100px',
+    left: '20px',
     width: '300px',
-    height: '200px',
+    height: '100px',
+    backgroundColor: '#fafafa',
+  };
+  const buttonStyle = {
+    position: 'relative',
+    top: '40px',
+    left: '-80px',
   };
 
   return (
@@ -35,7 +45,11 @@ const Repairs = () => {
       <p>Car name = {car.vehicle}</p>
       <p> Wait = {stWait} </p>
       <p> Cost = {stCost} </p>
+      <p> Comment: </p>
       <textarea style={commentStyle}>{stComment}</textarea>
+      <button style={buttonStyle} onClick={() => handleSaveComment()}>
+        Save Comment
+      </button>
     </div>
   );
 };
