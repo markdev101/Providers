@@ -5,15 +5,13 @@ import * as React from 'react';
 
 const Repairs = () => {
   const car: any = useContext(CarContext);
-  const repairData: any = useContext(RepairContext);
+  const { wait, cost, comment } = useContext(RepairContext);
 
-  const onToggle = (dir: string) => {
-    console.log('MODE CHOOSER toggled ' + dir);
-    // update global app context
-    repairData.mode = dir === 'left' ? 'workflow' : 'preset';
-  };
-  const direction = repairData.mode === 'workflow' ? 'left' : 'right';
-  console.log('ModeChooser direction  = ' + direction);
+  const [stWait, setWait] = wait;
+  const [stCost, setCost] = React.useState();
+  const [stComment, setComment] = React.useState();
+
+  console.log('REPAIRS: ', wait, cost, comment);
 
   const divStyle = {
     position: 'relative',
@@ -25,15 +23,19 @@ const Repairs = () => {
     overflow: 'auto',
     padding: '6px',
   };
-
-  console.log('REPAIRS: ', repairData);
+  const commentStyle = {
+    position: 'relative',
+    left: '100px',
+    width: '300px',
+    height: '200px',
+  };
 
   return (
     <div style={divStyle}>
       <p>Car name = {car.vehicle}</p>
-      {/* <p>    {repairData.wait.text} {repairData.wait.value} </p>
-      <p>    {repairData.cost.text} {repairData.cost.value} </p>
-      <textarea style={commentStyle}>{repairData.comment}</textarea> */}
+      <p> Wait = {stWait} </p>
+      <p> Cost = {stCost} </p>
+      <textarea style={commentStyle}>{stComment}</textarea>
     </div>
   );
 };
