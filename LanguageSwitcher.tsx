@@ -6,15 +6,15 @@ import CarContext from './CarContext';
 
 const LanguageSwitcher = () => {
   const { language, setLanguage } = useContext(LanguageContext);
-  const { vehicle, setVehicle } = useContext(CarContext);
+  const { car, setCar } = useContext(CarContext);
 
   const clickHandler = () => {
     const newLang = language === 'en' ? 'de' : 'en';
     setLanguage(newLang);
     // When the language changes, this component updates the vechicle context
     // to match the locale
-    if (newLang === 'en' && vehicle !== 'dodge') setVehicle('dodge');
-    else if (newLang === 'de' && vehicle !== 'vw') setVehicle('vw');
+    if (newLang === 'en' && car !== 'dodge') setCar('dodge');
+    else if (newLang === 'de' && car !== 'vw') setCar('vw');
   };
   return (
     <button onClick={() => clickHandler()}>

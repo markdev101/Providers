@@ -4,16 +4,14 @@ import { useContext } from 'react';
 import CarContext from './CarContext';
 
 const CarChanger = () => {
-  const { vehicle, setVehicle } = useContext(CarContext);
+  const { car, setCar } = useContext(CarContext);
 
   const clickHandler = () => {
-    const newcar = vehicle === 'vw' ? 'dodge' : 'vw';
-    setVehicle(newcar);
+    const newcar = car === 'vw' ? 'dodge' : 'vw';
+    setCar(newcar);
   };
   return (
-    <button onClick={() => clickHandler()}>
-      Change Cars (Current: {vehicle})
-    </button>
+    <button onClick={() => clickHandler()}>Change Cars (Current: {car})</button>
   );
 };
 

@@ -1,8 +1,8 @@
 import * as React from 'react';
 
 const CarContext = React.createContext({
-  vehicle: 'vw',
-  setVehicle: () => {},
+  car: 'vw',
+  setCar: () => {},
 });
 
 export default CarContext;

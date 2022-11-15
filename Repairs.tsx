@@ -4,13 +4,26 @@ import CarContext from './CarContext';
 import * as React from 'react';
 
 const Repairs = () => {
-  const car: any = useContext(CarContext);
-  const { vehicles, setVehicles } = useContext(RepairContext);
+  const carCtx: any = useContext(CarContext);
+  const repairCtx = useContext(RepairContext);
+  let info: any;
+  let textareaId = 'carDetails-' + new Date().getMilliseconds();
 
-  console.log('REPAIRS: ', vehicles, setVehicles);
-
+  console.log('REPAIRS CONTEXT:', repairCtx);
   const handleSaveComment = () => {
     console.log('Save Comment Clicked');
+    let textElem: any = document.getElementById(textareaId);
+    if (textElem) {
+      let txt = textElem.value;
+
+      if (info && info.vehicles[carCtx.car]) {
+        let data = { vehicles: { ...info.vehicles } };
+        data.vehicles[carCtx.car].comment = txt;
+        let s = JSON.stringify(data);
+
+        repairCtx.setInfo(s);
+      }
+    }
   };
 
   const divStyle = {
@@ -36,26 +49,46 @@ const Repairs = () => {
     left: '-80px',
   };
 
-  console.log('Car = ' + car.vehicle);
-  const details: any = vehicles[car.vehicle];
-  if (details) {
-    console.log(' STATS: ', details);
+  console.log('Car = ' + carCtx.car);
+  if (repairCtx) {
+    console.log(' STATS: ', repairCtx);
 
-    return (
-      <div style={divStyle}>
-        <p>Car name = {car.vehicle}</p>
-        <p> Wait = {details.wait} </p>
-        <p> Cost = {details.cost} </p>
-        <p> Comment: </p>
-        <textarea style={commentStyle}>{details.comment}</textarea>
-        <button style={buttonStyle} onClick={() => handleSaveComment()}>
-          Save Comment
-        </button>
-      </div>
-    );
+    if (repairCtx.info) {
+      info = JSON.parse(repairCtx.info);
+      if (info && info.vehicles) {
+        const details = info.vehicles[carCtx.car];
+        if (details) {
+          console.log('car=' + carCtx.car + '  comment=' + details.comment);
+          return (
+            <div style={divStyle}>
+              <div>Car name = {carCtx.car}</div>
+              <div>
+                <strong> Wait = </strong> {details.wait}
+              </div>
+              <div>
+                <strong> Cost = </strong>
+                {details.cost}
+              </div>
+              <div>
+                <strong> Comment: </strong>
+              </div>
+              <textarea id={textareaId} style={commentStyle}>
+                {details.comment}
+              </textarea>
+              <button style={buttonStyle} onClick={() => handleSaveComment()}>
+                Save Comment
+              </button>
+            </div>
+          );
+        }
+      } else {
+        return <div>invalid vehicle data in RepairConext</div>;
+      }
+    } else {
+      return <div>details missing stuff</div>;
+    }
   } else {
-    console.log('REPAIRS: ', vehicles, setVehicles, RepairContext.Provider);
-    return <div>No data found for {car.vehicle}</div>;
+    return <div>No data found for {carCtx.car}</div>;
   }
 };
 
