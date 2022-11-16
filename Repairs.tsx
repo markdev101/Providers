@@ -1,28 +1,38 @@
-import { useContext } from 'react';
+import * as React from 'react';
+import { useContext, useEffect, useState } from 'react';
 import RepairContext from './RepairContext';
 import CarContext from './CarContext';
-import * as React from 'react';
+import Comments from './Comments';
 
 const Repairs = () => {
   const carCtx: any = useContext(CarContext);
-  const repairCtx = useContext(RepairContext);
-  let info: any;
+  const { info, setInfo } = useContext(RepairContext);
+  const [stateComment, setStateComment] = useState('');
+
+  let localInfo: any;
   let textareaId = 'carDetails-' + new Date().getMilliseconds();
 
-  console.log('REPAIRS CONTEXT:', repairCtx);
-  const handleSaveComment = () => {
-    console.log('Save Comment Clicked');
-    let textElem: any = document.getElementById(textareaId);
-    if (textElem) {
-      let txt = textElem.value;
+  // useEffect(() => {
+  //   console.log('REPAIRS useEffect...', localInfo, stateComment);
 
-      if (info && info.vehicles[carCtx.car]) {
-        let data = { vehicles: { ...info.vehicles } };
-        data.vehicles[carCtx.car].comment = txt;
-        let s = JSON.stringify(data);
+  //   if (localInfo && localInfo.vehicles[carCtx.car]) {
+  //     let data = { vehicles: { ...localInfo.vehicles } };
+  //     data.vehicles[carCtx.car].comment = stateComment;
+  //     let s: string = JSON.stringify(data);
+  //     setInfo(s);
+  //   }
+  // }, [stateComment]);
 
-        repairCtx.setInfo(s);
-      }
+  console.log('REPAIRS CONTEXT:', info);
+
+  const handleSaveComment = (comment) => {
+    console.log('Save Comment Clicked with comment=', comment);
+    setStateComment(comment);
+    if (localInfo && localInfo.vehicles[carCtx.car]) {
+      let data = { vehicles: { ...localInfo.vehicles } };
+      data.vehicles[carCtx.car].comment = comment;
+      let s: string = JSON.stringify(data);
+      setInfo(s);
     }
   };
 
@@ -36,59 +46,39 @@ const Repairs = () => {
     overflow: 'auto',
     padding: '6px',
   };
-  const commentStyle = {
-    position: 'relative',
-    left: '20px',
-    width: '300px',
-    height: '100px',
-    backgroundColor: '#fafafa',
-  };
-  const buttonStyle = {
-    position: 'relative',
-    top: '40px',
-    left: '-80px',
-  };
 
   console.log('Car = ' + carCtx.car);
-  if (repairCtx) {
-    console.log(' STATS: ', repairCtx);
+  if (info) {
+    console.log(' STATS: ', info);
 
-    if (repairCtx.info) {
-      info = JSON.parse(repairCtx.info);
-      if (info && info.vehicles) {
-        const details = info.vehicles[carCtx.car];
-        if (details) {
-          console.log('car=' + carCtx.car + '  comment=' + details.comment);
-          return (
-            <div style={divStyle}>
-              <div>Car name = {carCtx.car}</div>
-              <div>
-                <strong> Wait = </strong> {details.wait}
-              </div>
-              <div>
-                <strong> Cost = </strong>
-                {details.cost}
-              </div>
-              <div>
-                <strong> Comment: </strong>
-              </div>
-              <textarea id={textareaId} style={commentStyle}>
-                {details.comment}
-              </textarea>
-              <button style={buttonStyle} onClick={() => handleSaveComment()}>
-                Save Comment
-              </button>
+    localInfo = JSON.parse(info);
+    if (localInfo && localInfo.vehicles) {
+      const details = localInfo.vehicles[carCtx.car];
+      if (details) {
+        let commentText = details.comment;
+        console.log('car=' + carCtx.car + '  comment=' + details.comment);
+        return (
+          <div style={divStyle}>
+            <div>Car name = {carCtx.car}</div>
+            <div>
+              <strong> Wait = </strong> {details.wait}
             </div>
-          );
-        }
-      } else {
-        return <div>invalid vehicle data in RepairConext</div>;
+            <div>
+              <strong> Cost = </strong>
+              {details.cost}
+            </div>
+            <div>
+              <strong> Comment: </strong>
+            </div>
+            <Comments onChange={handleSaveComment} text={commentText} />
+          </div>
+        );
       }
     } else {
-      return <div>details missing stuff</div>;
+      return <div>invalid vehicle data in RepairConext</div>;
     }
   } else {
-    return <div>No data found for {carCtx.car}</div>;
+    return <div>No details found for {carCtx.car}</div>;
   }
 };
 
