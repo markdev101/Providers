@@ -35,7 +35,6 @@ const Comments = (props) => {
         style={buttonStyle}
         onClick={() => {
           update();
-          textRef.value = '';
         }}
       >
         Save Comment
